@@ -6,9 +6,7 @@ Tiny status widget for showing Codex `/status` usage limits in `i3status`.
 
 <img src="assets/codex-usagebar-bar.png" alt="codex-usagebar output cropped to the i3status bar" width="980">
 
-```text
-97% 5h 06:03 | 99% wk F 01:03
-```
+<!-- bar text: 97% 5h 06:03 | 99% wk F 01:03 -->
 
 ## About
 
@@ -111,9 +109,7 @@ file.
 
 The normal line is:
 
-```text
-97% 5h 06:03 | 99% wk F 01:03
-```
+<!-- bar text: 97% 5h 06:03 | 99% wk F 01:03 -->
 
 That means:
 

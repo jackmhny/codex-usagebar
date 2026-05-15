@@ -2,7 +2,7 @@
 
 Tiny status widget for showing Codex `/status` usage limits in `i3status`.
 
-[HTML docs](https://jackmhny.github.io/usagebar/README.html)
+[HTML docs](https://jackmhny.github.io/codex-usagebar/README.html)
 
 ```text
 5h 97% 06:03 | wk 99% F 01:03

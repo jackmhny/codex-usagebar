@@ -1,0 +1,69 @@
+#!/bin/sh
+# Write Codex account usage limits for i3status.
+
+auth=${HOME}/.codex/auth.json
+out=${HOME}/.cache/i3status/codex-usage
+url=https://chatgpt.com/backend-api/wham/usage
+icon='󰅩'
+
+err() {
+    mkdir -p "${out%/*}"
+    printf '%s error\n' "$icon" > "$out"
+    exit 1
+}
+
+reset_time() {
+    [ -n "$1" ] || { printf '?'; return; }
+
+    day=$(date -d "@$1" +%F 2>/dev/null) || { printf '?'; return; }
+    today=$(date +%F)
+
+    if [ "$day" = "$today" ]; then
+        date -d "@$1" +%H:%M
+    else
+        printf '%s %s\n' "$(date -d "@$1" +%a | cut -c1)" "$(date -d "@$1" +%H:%M)"
+    fi
+}
+
+window() {
+    label=$1
+    json=$2
+
+    used=$(printf '%s' "$json" | jq -r '.used_percent // 0') || err
+    reset=$(printf '%s' "$json" | jq -r '.reset_at // empty') || err
+    left=$((100 - used))
+
+    [ "$left" -lt 0 ] && left=0
+    [ "$left" -gt 100 ] && left=100
+
+    printf '%s %s%% %s' "$label" "$left" "$(reset_time "$reset")"
+}
+
+[ -r "$auth" ] || err
+
+access=$(jq -r '.tokens | if type == "string" then fromjson else . end | .access_token // empty' "$auth") || err
+[ -n "$access" ] || err
+
+usage=$(curl -fsS --max-time 10 \
+    -H "Authorization: Bearer $access" \
+    -H 'Accept: application/json' \
+    -H 'User-Agent: codex-usagebar' \
+    "$url") || err
+
+rate=$(printf '%s' "$usage" | jq -c '.rate_limit // empty') || err
+[ -n "$rate" ] || err
+
+primary=$(printf '%s' "$rate" | jq -c '.primary_window // empty') || err
+weekly=$(printf '%s' "$rate" | jq -c '.secondary_window // empty') || err
+limited=$(printf '%s' "$rate" | jq -r '.limit_reached // false') || err
+
+status=$(printf '%s %s%s | %s\n' \
+    "$icon" \
+    "$([ "$limited" = true ] && printf 'LIMITED ')" \
+    "$(window 5h "$primary")" \
+    "$(window wk "$weekly")")
+
+mkdir -p "${out%/*}"
+tmp=$(mktemp "${out%/*}/.${out##*/}.XXXXXX") || err
+printf '%s' "$status" > "$tmp" || { rm -f "$tmp"; err; }
+mv -f "$tmp" "$out" || { rm -f "$tmp"; err; }

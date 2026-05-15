@@ -1,0 +1,351 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>codex-usagebar</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --paper: oklch(96.5% 0.008 86);
+      --paper-soft: oklch(93.5% 0.01 86);
+      --ink: oklch(22% 0.018 86);
+      --ink-soft: oklch(42% 0.019 86);
+      --ink-dim: oklch(58% 0.018 86);
+      --rule: oklch(80% 0.014 86);
+      --rule-strong: oklch(62% 0.018 86);
+      --accent: oklch(37% 0.092 132);
+      --accent-soft: oklch(88% 0.052 132);
+      --warn: oklch(46% 0.115 48);
+      --mono: "Berkeley Mono", "CommitMono", "JetBrains Mono", "Cascadia Mono", "Liberation Mono", monospace;
+      --sans: "Aptos", "Segoe UI Variable", "Segoe UI", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { background: var(--paper); }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--ink);
+      background: var(--paper);
+      font-family: var(--sans);
+      line-height: 1.6;
+    }
+
+    a {
+      color: var(--accent);
+      text-decoration-thickness: 1px;
+      text-underline-offset: 0.18em;
+    }
+
+    code, pre, kbd, .mono { font-family: var(--mono); }
+
+    .page {
+      width: min(920px, calc(100% - clamp(28px, 9vw, 112px)));
+      margin: 0 auto;
+      padding: clamp(34px, 7vw, 78px) 0 clamp(52px, 8vw, 96px);
+    }
+
+    .top {
+      display: flex;
+      justify-content: space-between;
+      gap: 24px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--rule-strong);
+      color: var(--ink-dim);
+      font-family: var(--mono);
+      font-size: 0.82rem;
+    }
+
+    header {
+      padding: clamp(52px, 10vw, 118px) 0 clamp(44px, 8vw, 88px);
+      border-bottom: 1px solid var(--rule);
+    }
+
+    h1 {
+      margin: 0;
+      max-width: 11ch;
+      font-family: var(--mono);
+      font-size: clamp(3.2rem, 11vw, 8.2rem);
+      font-weight: 700;
+      line-height: 0.86;
+      letter-spacing: -0.09em;
+      text-wrap: balance;
+    }
+
+    .lede {
+      max-width: 58ch;
+      margin: clamp(24px, 5vw, 44px) 0 0;
+      color: var(--ink-soft);
+      font-size: clamp(1.05rem, 2vw, 1.28rem);
+    }
+
+    .sample {
+      margin-top: clamp(26px, 5vw, 46px);
+      padding: 13px 0 12px;
+      border-top: 1px solid var(--rule-strong);
+      border-bottom: 1px solid var(--rule-strong);
+      font-family: var(--mono);
+      color: var(--accent);
+      font-size: clamp(0.94rem, 2vw, 1.18rem);
+      white-space: nowrap;
+      overflow-x: auto;
+    }
+
+    .caption {
+      margin-top: 10px;
+      color: var(--ink-dim);
+      font-family: var(--mono);
+      font-size: 0.82rem;
+    }
+
+    nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 22px;
+      padding: 18px 0;
+      border-bottom: 1px solid var(--rule);
+      font-family: var(--mono);
+      font-size: 0.86rem;
+    }
+
+    nav a {
+      color: var(--ink-soft);
+      text-decoration: none;
+    }
+
+    nav a:hover { color: var(--accent); }
+
+    section {
+      display: grid;
+      grid-template-columns: 13rem minmax(0, 1fr);
+      gap: clamp(22px, 5vw, 64px);
+      padding: clamp(30px, 6vw, 58px) 0;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    h2 {
+      margin: 0;
+      font-family: var(--mono);
+      font-size: clamp(1rem, 1.8vw, 1.28rem);
+      font-weight: 700;
+      line-height: 1.15;
+      letter-spacing: -0.035em;
+    }
+
+    p {
+      max-width: 68ch;
+      margin: 0;
+      color: var(--ink-soft);
+    }
+
+    p + p { margin-top: 14px; }
+
+    .facts {
+      display: grid;
+      gap: 10px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      font-family: var(--mono);
+      font-size: 0.94rem;
+    }
+
+    .facts li {
+      display: grid;
+      grid-template-columns: 7.5rem minmax(0, 1fr);
+      gap: 16px;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--rule);
+      color: var(--ink-soft);
+    }
+
+    .facts b {
+      color: var(--ink);
+      font-weight: 700;
+    }
+
+    .note {
+      margin-top: 18px;
+      padding: 12px 14px;
+      background: var(--paper-soft);
+      border: 1px solid var(--rule);
+      color: var(--ink-soft);
+    }
+
+    pre {
+      margin: 15px 0 0;
+      padding: 14px 16px;
+      overflow-x: auto;
+      background: var(--paper-soft);
+      border: 1px solid var(--rule);
+      color: var(--ink);
+      font-size: 0.91rem;
+      line-height: 1.55;
+    }
+
+    pre code { color: inherit; }
+
+    ol {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      counter-reset: step;
+      color: var(--ink-soft);
+    }
+
+    ol li {
+      counter-increment: step;
+      display: grid;
+      grid-template-columns: 2.8rem minmax(0, 1fr);
+      gap: 15px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    ol li::before {
+      content: counter(step, decimal-leading-zero);
+      color: var(--accent);
+      font-family: var(--mono);
+      font-weight: 700;
+    }
+
+    ol strong {
+      display: block;
+      color: var(--ink);
+      font-family: var(--mono);
+      font-size: 0.94rem;
+      margin-bottom: 2px;
+    }
+
+    .warn { color: var(--warn); }
+
+
+    footer {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      padding-top: 24px;
+      color: var(--ink-dim);
+      font-family: var(--mono);
+      font-size: 0.82rem;
+    }
+
+    @media (max-width: 720px) {
+      .page { width: min(100% - 28px, 920px); }
+      .top, footer { flex-direction: column; }
+      section { grid-template-columns: 1fr; gap: 16px; }
+      .facts li { grid-template-columns: 1fr; gap: 2px; }
+      h1 { max-width: 10ch; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <div class="top" aria-label="Document label">
+      <span>codex-usagebar</span>
+      <span>README.html</span>
+    </div>
+
+    <header>
+      <h1>codex usagebar</h1>
+      <p class="lede">A tiny shell script for i3status. It reads the Codex auth file, asks ChatGPT for usage limits, then writes one cache file for your bar.</p>
+      <div class="sample" aria-label="Example i3status output">5h 97% 06:03 | wk 99% F 01:03</div>
+    </header>
+
+    <nav aria-label="Page sections">
+      <a href="#about">about</a>
+      <a href="#install">install</a>
+      <a href="#timer">timer</a>
+      <a href="#i3status">i3status</a>
+      <a href="#customize">customize</a>
+    </nav>
+
+    <section id="about">
+      <h2>about</h2>
+      <div>
+        <ul class="facts">
+          <li><b>runtime</b><span>POSIX shell with <code>curl</code>, <code>jq</code>, GNU <code>date</code>, and <code>mktemp</code>.</span></li>
+          <li><b>auth</b><span>Reads <code>~/.codex/auth.json</code> and extracts the access token.</span></li>
+          <li><b>endpoint</b><span>Calls <code>https://chatgpt.com/backend-api/wham/usage</code>.</span></li>
+          <li><b>output</b><span>Writes <code>~/.cache/i3status/codex-usage</code> with atomic replacement.</span></li>
+        </ul>
+        <p class="note">The token is used only as a bearer token for the request. The script does not print it or cache it.</p>
+      </div>
+    </section>
+
+    <section id="install">
+      <h2>install</h2>
+      <div>
+        <p>Copy the script somewhere stable and make it executable.</p>
+        <pre><code>install -Dm755 codex-usagebar ~/.local/bin/codex-usagebar</code></pre>
+        <p style="margin-top: 18px;">Run it once and inspect the cache file.</p>
+        <pre><code>~/.local/bin/codex-usagebar
+cat ~/.cache/i3status/codex-usage</code></pre>
+      </div>
+    </section>
+
+    <section id="timer">
+      <h2>timer</h2>
+      <div>
+        <p>Run it from a systemd user timer. The service is oneshot because the script exits after each update.</p>
+        <pre><code>mkdir -p ~/.config/systemd/user
+cat &gt; ~/.config/systemd/user/codex-usagebar.service &lt;&lt;'EOF_SERVICE'
+[Unit]
+Description=Update Codex usage status for i3status
+
+[Service]
+Type=oneshot
+ExecStart=%h/.local/bin/codex-usagebar
+EOF_SERVICE
+
+cat &gt; ~/.config/systemd/user/codex-usagebar.timer &lt;&lt;'EOF_TIMER'
+[Unit]
+Description=Refresh Codex usage status for i3status
+
+[Timer]
+OnBootSec=30s
+OnUnitActiveSec=60s
+AccuracySec=10s
+Unit=codex-usagebar.service
+
+[Install]
+WantedBy=timers.target
+EOF_TIMER
+
+systemctl --user daemon-reload
+systemctl --user enable --now codex-usagebar.timer</code></pre>
+      </div>
+    </section>
+
+    <section id="i3status">
+      <h2>i3status</h2>
+      <div>
+        <p>Use <code>read_file</code> and point it at the cache path.</p>
+        <pre><code>order += "read_file codex_usage"
+
+read_file codex_usage {
+        path = "~/.cache/i3status/codex-usage"
+}</code></pre>
+      </div>
+    </section>
+
+    <section id="customize">
+      <h2>customize</h2>
+      <div>
+        <p>Edit the constants at the top of <code>codex-usagebar</code>.</p>
+        <pre><code>auth=${HOME}/.codex/auth.json
+out=${HOME}/.cache/i3status/codex-usage
+url=https://chatgpt.com/backend-api/wham/usage
+icon=''</code></pre>
+      </div>
+    </section>
+
+    <footer>
+      <span>codex-usagebar</span>
+    </footer>
+  </main>
+</body>
+</html>

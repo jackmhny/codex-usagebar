@@ -1,12 +1,12 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
   <rect width="1200" height="630" fill="#ffffff"/>
   <rect x="48" y="48" width="1104" height="534" fill="none" stroke="#000000" stroke-width="2"/>
-  <text x="78" y="132" font-family="Noto Sans Mono, DejaVu Sans Mono, monospace" font-size="54" fill="#000000">codex-usagebar</text>
+  <text x="78" y="132" font-family="JetBrains Mono, Noto Sans Mono, monospace" font-size="54" fill="#000000">codex-usagebar</text>
   <g transform="translate(78 258)">
     <rect x="0" y="0" width="1044" height="126" fill="#0b0d12"/>
     <rect x="0" y="0" width="1044" height="2" fill="#2a2f3b"/>
     <rect x="0" y="124" width="1044" height="2" fill="#2a2f3b"/>
-    <text x="34" y="82" font-family="Noto Sans Mono, DejaVu Sans Mono, monospace" font-size="57" fill="#7AA2F7">86% 5h 06:05 | 98% wk F 01:03</text>
+    <text x="34" y="82" font-family="JetBrains Mono, Noto Sans Mono, monospace" font-size="57" fill="#7AA2F7">86% 5h 06:05 | 98% wk F 01:03</text>
   </g>
-  <text x="78" y="492" font-family="Noto Sans Mono, DejaVu Sans Mono, monospace" font-size="30" fill="#000000">sh + curl + jq</text>
+  <text x="78" y="492" font-family="JetBrains Mono, Noto Sans Mono, monospace" font-size="30" fill="#000000">sh + curl + jq</text>
 </svg>

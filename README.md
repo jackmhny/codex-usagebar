@@ -4,8 +4,10 @@ Tiny status widget for showing Codex `/status` usage limits in `i3status`.
 
 [HTML docs](https://jackmhny.github.io/codex-usagebar/README.html)
 
+![codex-usagebar rendered in an i3status-style bar](assets/codex-usagebar.png)
+
 ```text
-5h 97% 06:03 | wk 99% F 01:03
+97% 5h 06:03 | 99% wk F 01:03
 ```
 
 ## About
@@ -110,11 +112,11 @@ file.
 The normal line is:
 
 ```text
-5h 97% 06:03 | wk 99% F 01:03
+97% 5h 06:03 | 99% wk F 01:03
 ```
 
 That means:
 
-- `5h 97% 06:03`: 97% remains in the primary 5-hour window, resetting today at `06:03`.
-- `wk 99% F 01:03`: 99% remains in the weekly window, resetting Friday at `01:03`.
-- `LIMITED`: appears before the 5-hour window if the endpoint reports `limit_reached`.
+- `97% 5h 06:03`: 97% remains in the primary 5-hour window, resetting today at `06:03`.
+- `99% wk F 01:03`: 99% remains in the weekly window, resetting Friday at `01:03`.
+- `LIMITED`: appears before the 5-hour percentage if the endpoint reports `limit_reached`.

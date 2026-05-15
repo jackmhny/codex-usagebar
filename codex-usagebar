@@ -4,11 +4,15 @@
 auth=${HOME}/.codex/auth.json
 out=${HOME}/.cache/i3status/codex-usage
 url=https://chatgpt.com/backend-api/wham/usage
-icon='󰅩'
+icon=''
 
 err() {
     mkdir -p "${out%/*}"
-    printf '%s error\n' "$icon" > "$out"
+    if [ -n "$icon" ]; then
+        printf '%s error\n' "$icon" > "$out"
+    else
+        printf 'error\n' > "$out"
+    fi
     exit 1
 }
 
@@ -36,7 +40,7 @@ window() {
     [ "$left" -lt 0 ] && left=0
     [ "$left" -gt 100 ] && left=100
 
-    printf '%s %s%% %s' "$label" "$left" "$(reset_time "$reset")"
+    printf '%s%% %s %s' "$left" "$label" "$(reset_time "$reset")"
 }
 
 [ -r "$auth" ] || err
@@ -57,9 +61,11 @@ primary=$(printf '%s' "$rate" | jq -c '.primary_window // empty') || err
 weekly=$(printf '%s' "$rate" | jq -c '.secondary_window // empty') || err
 limited=$(printf '%s' "$rate" | jq -r '.limit_reached // false') || err
 
-status=$(printf '%s %s%s | %s\n' \
-    "$icon" \
-    "$([ "$limited" = true ] && printf 'LIMITED ')" \
+prefix=$([ -n "$icon" ] && printf '%s ' "$icon")
+limited_prefix=$([ "$limited" = true ] && printf 'LIMITED ')
+status=$(printf '%s%s%s | %s\n' \
+    "$prefix" \
+    "$limited_prefix" \
     "$(window 5h "$primary")" \
     "$(window wk "$weekly")")
 

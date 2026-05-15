@@ -94,6 +94,14 @@
       overflow-x: auto;
     }
 
+    .shot {
+      display: block;
+      width: 100%;
+      margin-top: clamp(22px, 4vw, 36px);
+      border: 1px solid var(--rule);
+      background: var(--paper-soft);
+    }
+
     .caption {
       margin-top: 10px;
       color: var(--ink-dim);
@@ -252,7 +260,8 @@
     <header>
       <h1>codex usagebar</h1>
       <p class="lede">A tiny shell script for i3status. It reads the Codex auth file, asks ChatGPT for usage limits, then writes one cache file for your bar.</p>
-      <div class="sample" aria-label="Example i3status output">5h 97% 06:03 | wk 99% F 01:03</div>
+      <div class="sample" aria-label="Example i3status output">97% 5h 06:03 | 99% wk F 01:03</div>
+      <img class="shot" src="assets/codex-usagebar.png" alt="codex-usagebar rendered in an i3status-style bar with the text 86% 5h 06:05 | 98% wk F 01:03">
     </header>
 
     <nav aria-label="Page sections">

@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="720" viewBox="0 0 1600 720">
+  <rect width="1600" height="720" fill="#f4f1e8"/>
+  <g transform="translate(170 208)">
+    <text x="0" y="0" font-family="Terminess Nerd Font Propo, monospace" font-size="44" fill="#6f6757">codex-usagebar</text>
+    <text x="0" y="76" font-family="Terminess Nerd Font Propo, monospace" font-size="30" fill="#8a806d">tiny i3status line for Codex usage</text>
+  </g>
+  <g transform="translate(170 390)">
+    <rect x="0" y="0" width="1260" height="76" fill="#0b0d12"/>
+    <rect x="0" y="0" width="1260" height="1" fill="#2a2f3b"/>
+    <rect x="0" y="75" width="1260" height="1" fill="#2a2f3b"/>
+    <text x="32" y="50" font-family="Terminess Nerd Font Propo, monospace" font-size="34" fill="#7AA2F7">86% 5h 06:05 | 98% wk F 01:03</text>
+  </g>
+  <text x="170" y="545" font-family="Terminess Nerd Font Propo, monospace" font-size="24" fill="#8a806d">reads ~/.codex/auth.json  →  writes ~/.cache/i3status/codex-usage</text>
+</svg>

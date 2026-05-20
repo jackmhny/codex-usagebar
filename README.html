@@ -260,8 +260,8 @@
     <header>
       <h1>codex usagebar</h1>
       <p class="lede">A tiny shell script for i3status. It reads the Codex auth file, asks ChatGPT for usage limits, then writes one cache file for your bar.</p>
-      <div class="sample" aria-label="Example i3status output">97% 5h 06:03 | 99% wk F 01:03</div>
-      <img class="shot" src="assets/codex-usagebar-bar.png" alt="codex-usagebar output cropped to the i3status bar with the text 86% 5h 06:05 | 98% wk F 01:03">
+      <div class="sample" aria-label="Example i3status output">████████████░░  92% 05:04</div>
+      <img class="shot" src="assets/codex-usagebar-bar.png" alt="codex-usagebar output cropped to the i3status bar showing a minimal colored block bar, remaining percent, and reset time">
     </header>
 
     <nav aria-label="Page sections">
@@ -280,6 +280,7 @@
           <li><b>auth</b><span>Reads <code>~/.codex/auth.json</code> and extracts the access token.</span></li>
           <li><b>endpoint</b><span>Calls <code>https://chatgpt.com/backend-api/wham/usage</code>.</span></li>
           <li><b>output</b><span>Writes <code>~/.cache/i3status/codex-usage</code> with atomic replacement.</span></li>
+          <li><b>format</b><span>Displays only the primary window as a color block bar + remaining percent + reset time.</span></li>
         </ul>
         <p class="note">The token is used only as a bearer token for the request. The script does not print it or cache it.</p>
       </div>
@@ -348,7 +349,16 @@ read_file codex_usage {
         <pre><code>auth=${HOME}/.codex/auth.json
 out=${HOME}/.cache/i3status/codex-usage
 url=https://chatgpt.com/backend-api/wham/usage
-icon=''</code></pre>
+icon=''
+
+bar_width=14
+block='█'
+esc=$(printf '\\033')
+color_red="${esc}[38;5;203m"
+color_yellow="${esc}[38;5;221m"
+color_green="${esc}[38;5;120m"
+color_bg="${esc}[48;5;236m"
+color_reset="${esc}[0m"</code></pre>
       </div>
     </section>
 

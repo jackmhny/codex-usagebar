@@ -6,13 +6,13 @@ Tiny status widget for showing Codex `/status` usage limits in `i3status`.
 
 <img src="assets/codex-usagebar-bar.png" alt="codex-usagebar output cropped to the i3status bar" width="980">
 
-<!-- bar text: 97% 5h 06:03 | 99% wk F 01:03 -->
+<!-- bar text: ████████████░░ 92% 05:04 (colors in terminal) -->
 
 ## About
 
 `codex-usagebar` reads the ChatGPT access token that Codex stores in
 `~/.codex/auth.json`, calls the ChatGPT usage endpoint used by Codex status
-requests, formats the remaining 5-hour and weekly windows, and atomically writes
+requests, formats the remaining primary window as a color-coded block bar, and atomically writes
 the result to:
 
 ```text
@@ -100,19 +100,33 @@ auth=${HOME}/.codex/auth.json
 out=${HOME}/.cache/i3status/codex-usage
 url=https://chatgpt.com/backend-api/wham/usage
 icon=''
+
+bar_width=14
+block='█'
+esc=$(printf '\\033')
+color_red="${esc}[38;5;203m"
+color_yellow="${esc}[38;5;221m"
+color_green="${esc}[38;5;120m"
+color_bg="${esc}[48;5;236m"
+color_reset="${esc}[0m"
 ```
 
-Change the output path, icon, endpoint, labels, or formatting directly in the
+Change the output path, icon, endpoint, bar styling, or formatting directly in the
 file.
 
 ## Output format
 
 The normal line is:
 
-<!-- bar text: 97% 5h 06:03 | 99% wk F 01:03 -->
+```text
+████████████░░  92% 05:04
+```
+
+(Blocks are colorized in your status bar: green/yellow/red for filled usage and gray background for the unfilled tail.)
 
 That means:
 
-- `97% 5h 06:03`: 97% remains in the primary 5-hour window, resetting today at `06:03`.
-- `99% wk F 01:03`: 99% remains in the weekly window, resetting Friday at `01:03`.
-- `LIMITED`: appears before the 5-hour percentage if the endpoint reports `limit_reached`.
+- The block bar shows the remaining primary-window quota at a glance.
+- `92%` is remaining usage in the primary window.
+- `05:04` is the reset time (today or short weekday+time if not today).
+- `LIMITED` appears as a prefix if the endpoint reports `limit_reached`.

@@ -1,10 +1,21 @@
 #!/bin/sh
 # Write Codex account usage limits for i3status.
+# Inspired by pchalasani/claude-code-tools statusline style:
+# a compact, color-coded ASCII usage bar for at-a-glance limits.
 
 auth=${HOME}/.codex/auth.json
 out=${HOME}/.cache/i3status/codex-usage
 url=https://chatgpt.com/backend-api/wham/usage
 icon=''
+
+# ANSI colors
+RST='\033[0m'
+BOLD='\033[1m'
+RED='\033[31m'
+ORANGE='\033[38;5;208m'
+YELLOW='\033[33m'
+GREEN='\033[32m'
+GRAY='\033[90m'
 
 err() {
     mkdir -p "${out%/*}"
@@ -29,6 +40,39 @@ reset_time() {
     fi
 }
 
+usage_color() {
+    p=$1
+    if [ "$p" -ge 95 ] 2>/dev/null; then
+        printf '%b' "$RED"
+    elif [ "$p" -ge 85 ] 2>/dev/null; then
+        printf '%b' "$ORANGE"
+    elif [ "$p" -ge 70 ] 2>/dev/null; then
+        printf '%b' "$YELLOW"
+    else
+        printf '%b' "$GREEN"
+    fi
+}
+
+bar() {
+    used=$1
+    width=14
+    [ "$used" -lt 0 ] && used=0
+    [ "$used" -gt 100 ] && used=100
+
+    filled=$((used * width / 100))
+    [ "$filled" -gt "$width" ] && filled=$width
+    empty=$((width - filled))
+
+    fill=""
+    while [ "${#fill}" -lt "$filled" ]; do fill="${fill}#"; done
+    rest=""
+    while [ "${#rest}" -lt "$empty" ]; do rest="${rest}-"; done
+
+    c=$(usage_color "$used")
+    # Color the used/filled area; keep remaining dim gray.
+    printf '%b[%s%b%s%b]' "$c" "$fill" "$GRAY" "$rest" "$RST"
+}
+
 window() {
     label=$1
     json=$2
@@ -40,7 +84,7 @@ window() {
     [ "$left" -lt 0 ] && left=0
     [ "$left" -gt 100 ] && left=100
 
-    printf '%s%% %s %s' "$left" "$label" "$(reset_time "$reset")"
+    printf '%s %b%3s%%%b %s %s' "$(bar "$used")" "$BOLD" "$left" "$RST" "$label" "$(reset_time "$reset")"
 }
 
 [ -r "$auth" ] || err
@@ -62,7 +106,7 @@ weekly=$(printf '%s' "$rate" | jq -c '.secondary_window // empty') || err
 limited=$(printf '%s' "$rate" | jq -r '.limit_reached // false') || err
 
 prefix=$([ -n "$icon" ] && printf '%s ' "$icon")
-limited_prefix=$([ "$limited" = true ] && printf 'LIMITED ')
+limited_prefix=$([ "$limited" = true ] && printf '%bLIMITED%b ' "$RED" "$RST")
 status=$(printf '%s%s%s | %s\n' \
     "$prefix" \
     "$limited_prefix" \
@@ -71,5 +115,5 @@ status=$(printf '%s%s%s | %s\n' \
 
 mkdir -p "${out%/*}"
 tmp=$(mktemp "${out%/*}/.${out##*/}.XXXXXX") || err
-printf '%s' "$status" > "$tmp" || { rm -f "$tmp"; err; }
+printf '%b' "$status" > "$tmp" || { rm -f "$tmp"; err; }
 mv -f "$tmp" "$out" || { rm -f "$tmp"; err; }

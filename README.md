@@ -6,7 +6,7 @@ Tiny status widget for showing Codex `/status` usage limits in `i3status`.
 
 <img src="assets/codex-usagebar-bar.png" alt="codex-usagebar output cropped to the i3status bar" width="980">
 
-<!-- bar text: 97% 5h 06:03 | 99% wk F 01:03 -->
+<!-- bar text: [##------------] 97% 5h 06:03 | [#-------------] 99% wk F 01:03 -->
 
 ## About
 
@@ -109,7 +109,9 @@ file.
 
 The normal line is:
 
-<!-- bar text: 97% 5h 06:03 | 99% wk F 01:03 -->
+<!-- bar text: [##------------] 97% 5h 06:03 | [#-------------] 99% wk F 01:03 -->
+
+ANSI-capable status bars/terminals color the filled bar segment by usage: green (<70%), yellow (70%+), orange (85%+), red (95%+).
 
 That means:
 

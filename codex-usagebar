@@ -6,6 +6,10 @@ out=${HOME}/.cache/i3status/codex-usage
 url=https://chatgpt.com/backend-api/wham/usage
 icon=''
 
+bar_width=14
+filled_block='█'
+empty_block='░'
+
 err() {
     mkdir -p "${out%/*}"
     if [ -n "$icon" ]; then
@@ -29,9 +33,28 @@ reset_time() {
     fi
 }
 
+usage_bar() {
+    left=$1
+    filled=$((left * bar_width / 100))
+    [ "$filled" -lt 0 ] && filled=0
+    [ "$filled" -gt "$bar_width" ] && filled=$bar_width
+
+    i=0
+    bar=''
+    while [ "$i" -lt "$bar_width" ]; do
+        if [ "$i" -lt "$filled" ]; then
+            bar="${bar}${filled_block}"
+        else
+            bar="${bar}${empty_block}"
+        fi
+        i=$((i + 1))
+    done
+
+    printf '%s' "$bar"
+}
+
 window() {
-    label=$1
-    json=$2
+    json=$1
 
     used=$(printf '%s' "$json" | jq -r '.used_percent // 0') || err
     reset=$(printf '%s' "$json" | jq -r '.reset_at // empty') || err
@@ -40,7 +63,9 @@ window() {
     [ "$left" -lt 0 ] && left=0
     [ "$left" -gt 100 ] && left=100
 
-    printf '%s%% %s %s' "$left" "$label" "$(reset_time "$reset")"
+    bar=$(usage_bar "$left")
+
+    printf '%s %3s%% %s' "$bar" "$left" "$(reset_time "$reset")"
 }
 
 [ -r "$auth" ] || err
@@ -58,16 +83,14 @@ rate=$(printf '%s' "$usage" | jq -c '.rate_limit // empty') || err
 [ -n "$rate" ] || err
 
 primary=$(printf '%s' "$rate" | jq -c '.primary_window // empty') || err
-weekly=$(printf '%s' "$rate" | jq -c '.secondary_window // empty') || err
 limited=$(printf '%s' "$rate" | jq -r '.limit_reached // false') || err
 
 prefix=$([ -n "$icon" ] && printf '%s ' "$icon")
 limited_prefix=$([ "$limited" = true ] && printf 'LIMITED ')
-status=$(printf '%s%s%s | %s\n' \
+status=$(printf '%s%s%s\n' \
     "$prefix" \
     "$limited_prefix" \
-    "$(window 5h "$primary")" \
-    "$(window wk "$weekly")")
+    "$(window "$primary")")
 
 mkdir -p "${out%/*}"
 tmp=$(mktemp "${out%/*}/.${out##*/}.XXXXXX") || err
